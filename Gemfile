@@ -75,3 +75,5 @@ gem "nokogiri", "~> 1.19"
 gem "faraday", "~> 2.14"
 
 gem "sidekiq-scheduler", "~> 6.0"
+
+gem "pagy", "~> 43.5"
