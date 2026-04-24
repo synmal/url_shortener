@@ -68,6 +68,7 @@ group :test do
   gem 'webmock'
 end
 
+gem "redis", "~> 5.0"
 gem "sidekiq", "~> 8.1"
 
 gem "nokogiri", "~> 1.19"
