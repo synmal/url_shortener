@@ -3,7 +3,7 @@ class ShortUrl < ApplicationRecord
   has_many :visits, dependent: :destroy
 
   # Uses Base58 alphabet (excludes 0/O/l/I to avoid ambiguity). Slugs are generated at the service layer.
-  # The regex enforces this format and length constraint at the model level, catching invalid input before routing.
+  # The regex enforces this format at the model level as a second defense after the route constraint.
   BASE58_SLUG = /\A[1-9A-HJ-NP-Za-km-z]{4,15}\z/
 
   validates :slug, presence: true, uniqueness: { case_sensitive: true },
