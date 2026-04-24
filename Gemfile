@@ -71,3 +71,5 @@ gem "sidekiq", "~> 8.1"
 
 gem "nokogiri", "~> 1.19"
 gem "faraday", "~> 2.14"
+
+gem "sidekiq-scheduler", "~> 6.0"
