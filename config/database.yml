@@ -83,3 +83,4 @@ production:
   database: url_shortener_production
   username: url_shortener
   password: <%= ENV["URL_SHORTENER_DATABASE_PASSWORD"] %>
+  host: <%= ENV.fetch("DATABASE_HOST", "url_shortener-db") %>
