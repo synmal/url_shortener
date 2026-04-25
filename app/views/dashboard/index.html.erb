@@ -1,0 +1,32 @@
+<% content_for(:title, "Dashboard") %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h4 mb-0">Dashboard</h1>
+  <%= link_to "Shorten a URL", root_path, class: "btn btn-primary btn-sm" %>
+</div>
+
+<% if @short_urls.any? %>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Short URL</th>
+          <th>Target</th>
+          <th class="text-center">Visits</th>
+          <th>Created</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render partial: "short_url_row", collection: @short_urls, as: :short_url %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= pagy_nav(@pagy) if @pagy.pages > 1 %>
+<% else %>
+  <div class="text-center py-5">
+    <p class="text-muted mb-3">You haven't shortened any URLs yet.</p>
+    <%= link_to "Shorten your first URL", root_path, class: "btn btn-primary" %>
+  </div>
+<% end %>

@@ -1,0 +1,13 @@
+<tr>
+  <td>
+    <code class="font-monospace"><%= short_url.slug %></code>
+  </td>
+  <td class="text-break" style="max-width: 300px;">
+    <%= link_to short_url.target_url.url, short_url.target_url.url, target: "_blank", rel: "noopener", class: "text-truncate d-inline-block" %>
+  </td>
+  <td class="text-center"><%= short_url.visits_count %></td>
+  <td><%= short_url.created_at.strftime("%b %d, %Y") %></td>
+  <td>
+    <%= link_to "Metrics", short_url_metrics_path(short_url.slug), class: "btn btn-outline-secondary btn-sm" %>
+  </td>
+</tr>
