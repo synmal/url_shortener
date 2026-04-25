@@ -23,7 +23,9 @@
     </table>
   </div>
 
-  <%= pagy_nav(@pagy) if @pagy.pages > 1 %>
+  <div class="d-flex justify-content-center pt-3">
+    <%== @pagy.series_nav_js(:bootstrap) %>
+  </div>
 <% else %>
   <div class="text-center py-5">
     <p class="text-muted mb-3">You haven't shortened any URLs yet.</p>
