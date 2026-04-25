@@ -3,9 +3,13 @@ require "rails_helper"
 RSpec.describe MetricsController, type: :controller do
   render_views
 
+  let(:user) { create(:user) }
+
+  before { sign_in user }
+
   describe "GET #show" do
     it "returns http success" do
-      short_url = create(:short_url)
+      short_url = create(:short_url, user:)
 
       get :show, params: { slug: short_url.slug }
 
@@ -14,10 +18,10 @@ RSpec.describe MetricsController, type: :controller do
     end
 
     it "assigns visits grouped by country" do
-      short_url = create(:short_url)
-      create(:visit, short_url: short_url, country: "US")
-      create(:visit, short_url: short_url, country: "US")
-      create(:visit, short_url: short_url, country: "GB")
+      short_url = create(:short_url, user:)
+      create(:visit, short_url:, country: "US")
+      create(:visit, short_url:, country: "US")
+      create(:visit, short_url:, country: "GB")
 
       get :show, params: { slug: short_url.slug }
 
@@ -25,11 +29,11 @@ RSpec.describe MetricsController, type: :controller do
     end
 
     it "orders visits by country count descending" do
-      short_url = create(:short_url)
-      create(:visit, short_url: short_url, country: "GB")
-      create(:visit, short_url: short_url, country: "US")
-      create(:visit, short_url: short_url, country: "US")
-      create(:visit, short_url: short_url, country: "US")
+      short_url = create(:short_url, user:)
+      create(:visit, short_url:, country: "GB")
+      create(:visit, short_url:, country: "US")
+      create(:visit, short_url:, country: "US")
+      create(:visit, short_url:, country: "US")
 
       get :show, params: { slug: short_url.slug }
 
@@ -37,8 +41,8 @@ RSpec.describe MetricsController, type: :controller do
     end
 
     it "assigns paginated recent visits" do
-      short_url = create(:short_url)
-      visits = create_list(:visit, 5, short_url: short_url)
+      short_url = create(:short_url, user:)
+      create_list(:visit, 5, short_url:)
 
       get :show, params: { slug: short_url.slug }
 
@@ -47,8 +51,8 @@ RSpec.describe MetricsController, type: :controller do
     end
 
     it "paginates recent visits" do
-      short_url = create(:short_url)
-      create_list(:visit, 30, short_url: short_url)
+      short_url = create(:short_url, user:)
+      create_list(:visit, 30, short_url:)
 
       get :show, params: { slug: short_url.slug }
 
@@ -63,12 +67,31 @@ RSpec.describe MetricsController, type: :controller do
     end
 
     it "returns empty country breakdown with no visits" do
-      short_url = create(:short_url)
+      short_url = create(:short_url, user:)
 
       get :show, params: { slug: short_url.slug }
 
       expect(assigns(:visits_by_country)).to be_empty
       expect(assigns(:recent_visits)).to be_empty
+    end
+
+    it "returns not found for another user's short URL" do
+      other_user = create(:user)
+      short_url = create(:short_url, user: other_user)
+
+      get :show, params: { slug: short_url.slug }
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "authentication" do
+    before { sign_out user }
+
+    it "redirects to sign in" do
+      get :show, params: { slug: "abc123" }
+
+      expect(response).to redirect_to(new_user_session_path)
     end
   end
 end
