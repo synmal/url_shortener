@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe IpAddressValidator do
   let(:record) { Visit.new }
-  let(:validator) { described_class.new(attributes: [:ip_address]) }
+  let(:validator) { described_class.new(attributes: [ :ip_address ]) }
 
   before { validator.validate_each(record, :ip_address, value) }
 

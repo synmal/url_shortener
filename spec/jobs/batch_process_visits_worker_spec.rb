@@ -11,7 +11,7 @@ RSpec.describe BatchProcessVisitsWorker do
       short_url = create(:short_url)
       visit = create(:visit, short_url:, ip_address: "1.2.3.4")
 
-      stub_batch_result([{ query: "1.2.3.4", lat: 37.7749, lon: -122.4194, country: "United States" }])
+      stub_batch_result([ { query: "1.2.3.4", lat: 37.7749, lon: -122.4194, country: "United States" } ])
 
       described_class.perform_now
 
@@ -42,7 +42,7 @@ RSpec.describe BatchProcessVisitsWorker do
       short_url = create(:short_url)
       create(:visit, short_url:, ip_address: "1.2.3.4")
 
-      stub_batch_result([{ query: "1.2.3.4", lat: 37.7749, lon: -122.4194, country: "US" }], remaining: 140, ttl: 60)
+      stub_batch_result([ { query: "1.2.3.4", lat: 37.7749, lon: -122.4194, country: "US" } ], remaining: 140, ttl: 60)
 
       redis_double = double(get: nil, set: true)
       expect(redis_double).to receive(:set).with("ip_api:rate_limit_remaining", 140, ex: 60)
@@ -56,7 +56,7 @@ RSpec.describe BatchProcessVisitsWorker do
       create(:visit, short_url:, ip_address: "1.2.3.4")
       create(:visit, short_url:, ip_address: "5.6.7.8")
 
-      stub_batch_result([{ query: "1.2.3.4", lat: 37.7, lon: -122.4, country: "US" }])
+      stub_batch_result([ { query: "1.2.3.4", lat: 37.7, lon: -122.4, country: "US" } ])
 
       # Simulate new visits arriving between batch processing and re-enqueue check
       scope = Visit.unprocessed
@@ -95,7 +95,7 @@ RSpec.describe BatchProcessVisitsWorker do
       short_url = create(:short_url)
       visit = create(:visit, short_url:, ip_address: "1.2.3.4")
 
-      stub_batch_result([{ query: "1.2.3.4", lat: 999, lon: -122.4, country: "US" }])
+      stub_batch_result([ { query: "1.2.3.4", lat: 999, lon: -122.4, country: "US" } ])
 
       described_class.perform_now
 

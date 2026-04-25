@@ -83,7 +83,7 @@ RSpec.describe TargetUrl, type: :model do
     end
 
     it "rejects URLs that DNS-resolve to private IPs" do
-      allow(Resolv).to receive(:getaddresses).with("evil.com").and_return(["10.0.0.1"])
+      allow(Resolv).to receive(:getaddresses).with("evil.com").and_return([ "10.0.0.1" ])
 
       expect(build(:target_url, url: "http://evil.com")).not_to be_valid
     end

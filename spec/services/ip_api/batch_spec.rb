@@ -20,7 +20,7 @@ RSpec.describe IpApi::Batch do
       stub_request(:post, "http://ip-api.com/batch")
         .to_return(body: success_body, status: 200, headers: { "X-Rl" => "140", "X-Ttl" => "60" })
 
-      result = described_class.call(["1.2.3.4", "5.6.7.8"])
+      result = described_class.call([ "1.2.3.4", "5.6.7.8" ])
 
       expect(result.success?).to be true
       expect(result.data.size).to eq(2)
@@ -34,7 +34,7 @@ RSpec.describe IpApi::Batch do
       stub_request(:post, "http://ip-api.com/batch")
         .to_return(body: mixed_body, status: 200, headers: { "X-Rl" => "140", "X-Ttl" => "60" })
 
-      result = described_class.call(["1.2.3.4", "invalid"])
+      result = described_class.call([ "1.2.3.4", "invalid" ])
 
       expect(result.success?).to be true
       expect(result.data.size).to eq(1)
@@ -45,7 +45,7 @@ RSpec.describe IpApi::Batch do
       stub_request(:post, "http://ip-api.com/batch").to_timeout
 
       expect(Rails.logger).to receive(:error).with(/\[IpApi::Batch\] Request failed/)
-      result = described_class.call(["1.2.3.4"])
+      result = described_class.call([ "1.2.3.4" ])
 
       expect(result.success?).to be false
       expect(result.data).to be_empty
@@ -58,7 +58,7 @@ RSpec.describe IpApi::Batch do
         .to_return(body: "<html>Server Error</html>", status: 500, headers: { "Content-Type" => "text/html" })
 
       expect(Rails.logger).to receive(:error).with(/\[IpApi::Batch\] Request failed/)
-      result = described_class.call(["1.2.3.4"])
+      result = described_class.call([ "1.2.3.4" ])
 
       expect(result.success?).to be false
       expect(result.data).to be_empty
