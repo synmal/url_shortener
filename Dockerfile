@@ -78,7 +78,8 @@ RUN rm -rf node_modules
 
 FROM base AS production
 
-ENV RAILS_ENV="production"
+ENV RAILS_ENV="production" \
+    BUNDLE_WITHOUT="development"
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
