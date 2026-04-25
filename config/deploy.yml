@@ -5,15 +5,15 @@ image: ghcr.io/synmal/url_shortener
 servers:
   web:
     hosts:
-      - $SERVER_HOST
+      - <%= ENV["SERVER_HOST"] %>
     cmd: ./bin/thrust ./bin/rails server
   workers:
     hosts:
-      - $SERVER_HOST
+      - <%= ENV["SERVER_HOST"] %>
     cmd: bundle exec sidekiq
 
 proxy:
-  host: $APP_HOST
+  host: <%= ENV["APP_HOST"] %>
   ssl: true
   app_port: 80
   healthcheck:
@@ -44,14 +44,14 @@ env:
     - URL_SHORTENER_DATABASE_PASSWORD
 
 ssh:
-  user: $SSH_USER
+  user: <%= ENV["SSH_USER"] %>
 
 asset_path: /rails/public/assets
 
 accessories:
   db:
     image: postgres:17
-    host: $SERVER_HOST
+    host: <%= ENV["SERVER_HOST"] %>
     port: "5432:5432"
     env:
       clear:
@@ -69,7 +69,7 @@ accessories:
 
   redis:
     image: redis:7-alpine
-    host: $SERVER_HOST
+    host: <%= ENV["SERVER_HOST"] %>
     port: "6379:6379"
     directories:
       - data:/data
