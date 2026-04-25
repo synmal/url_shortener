@@ -19,10 +19,8 @@ proxy:
   host: $APP_HOST
   ssl: true
   app_port: 80
-
-healthcheck:
-  path: /up
-  port: 80
+  healthcheck:
+    path: /up
 
 registry:
   server: ghcr.io
