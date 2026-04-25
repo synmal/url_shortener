@@ -52,10 +52,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/deploy_key
 
       - name: Deploy
         env:
-          SSH_KEY_FILE: ~/.ssh/deploy_key
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           URL_SHORTENER_DATABASE_PASSWORD: ${{ secrets.URL_SHORTENER_DATABASE_PASSWORD }}
