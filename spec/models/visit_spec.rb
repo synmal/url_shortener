@@ -13,6 +13,15 @@ RSpec.describe Visit, type: :model do
       expect(build(:visit, ip_address: "192.168.1.1")).to be_valid
     end
 
+    it "accepts valid IPv6 address" do
+      expect(build(:visit, ip_address: "::1")).to be_valid
+      expect(build(:visit, ip_address: "2001:db8::1")).to be_valid
+    end
+
+    it "accepts IPv4-mapped IPv6 address" do
+      expect(build(:visit, ip_address: "::ffff:192.168.1.1")).to be_valid
+    end
+
     it "rejects invalid IP address" do
       expect(build(:visit, ip_address: "hello")).not_to be_valid
     end

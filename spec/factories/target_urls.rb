@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :target_url do
-    url { "https://example.com" }
+    sequence(:url) { |n| "https://example-#{n}.com" }
     title { nil }
   end
 end
