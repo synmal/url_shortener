@@ -1,0 +1,15 @@
+<%= render layout: "shared/centered_card" do %>
+  <h1 class="h4 mb-3">Shorten a URL</h1>
+
+  <%= form_with(model: form, url: target_urls_path, scope: :target_url_form) do |f| %>
+    <div class="mb-3">
+      <%= f.label :url, "URL", class: "form-label" %>
+      <%= f.url_field :url, value: form.url, placeholder: "https://example.com", class: "form-control #{'is-invalid' if form.errors[:url].any?}", autofocus: true, required: true %>
+      <% form.errors[:url].each do |error| %>
+        <div class="invalid-feedback"><%= error %></div>
+      <% end %>
+    </div>
+
+    <%= f.submit "Shorten", class: "btn btn-primary w-100" %>
+  <% end %>
+<% end %>

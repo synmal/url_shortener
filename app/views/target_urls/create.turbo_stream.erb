@@ -1,0 +1,7 @@
+<%= turbo_stream.update "url_card" do %>
+  <%= render "target_urls/result_card", short_url: @short_url, target_url: @target_url %>
+<% end %>
+
+<%= turbo_stream.update "flash" do %>
+  <%= render "shared/flash_notice", message: "URL shortened successfully!", type: "success" %>
+<% end %>
