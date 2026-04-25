@@ -1,5 +1,6 @@
-:schedule:
-  batch_process_visits:
-    cron: "*/5 * * * *"
-    class: BatchProcessVisitsWorker
-    queue: low
+:scheduler:
+  :schedule:
+    batch_process_visits:
+      cron: "*/5 * * * *"
+      class: BatchProcessVisitsWorker
+      queue: low

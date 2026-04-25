@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   require "sidekiq/web"
+  require "sidekiq-scheduler/web"
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
     ActiveSupport::SecurityUtils.secure_compare(
       username, ENV.fetch("SIDEKIQ_WEB_USERNAME", "admin")
