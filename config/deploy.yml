@@ -6,10 +6,7 @@ servers:
   web:
     hosts:
       - $SERVER_HOST
-    cmd:
-      - ./bin/thrust
-      - ./bin/rails
-      - server
+    cmd: ./bin/thrust ./bin/rails server
   workers:
     hosts:
       - $SERVER_HOST
