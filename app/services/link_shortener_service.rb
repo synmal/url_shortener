@@ -30,7 +30,7 @@ class LinkShortenerService
       Result.new(target_url:, short_url:)
     end
   rescue URI::Error, ArgumentError => e
-    raise ArgumentError, e.message
+    raise ArgumentError, e.message, cause: e
   end
 
   private
