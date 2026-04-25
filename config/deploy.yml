@@ -10,7 +10,7 @@ servers:
   workers:
     hosts:
       - <%= ENV["SERVER_HOST"] %>
-    cmd: bundle exec sidekiq
+    cmd: bundle exec sidekiq -C config/sidekiq.yml
 
 proxy:
   host: <%= ENV["APP_HOST"] %>
@@ -35,7 +35,7 @@ builder:
 
 env:
   clear:
-    APP_HOST: $APP_HOST
+    APP_HOST: <%= ENV["APP_HOST"] %>
     DATABASE_HOST: url_shortener-db
     REDIS_URL: redis://url_shortener-redis:6379/0
     RAILS_LOG_LEVEL: info
