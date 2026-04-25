@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
   root "target_urls#new"
-  resources :target_urls, only: [:new, :create]
+  resources :target_urls, only: [:new, :create, :show]
 
-  get "/:slug", to: "short_urls#show", as: :short_url, constraints: { slug: ShortUrl::BASE58_SLUG }
-  get "/:slug/metrics", to: "metrics#show", as: :short_url_metrics, constraints: { slug: ShortUrl::BASE58_SLUG }
+  get "/:slug", to: "short_urls#show", as: :short_url, constraints: { slug: /[1-9A-HJ-NP-Za-km-z]{4,15}/ }
+  get "/:slug/metrics", to: "metrics#show", as: :short_url_metrics, constraints: { slug: /[1-9A-HJ-NP-Za-km-z]{4,15}/ }
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
