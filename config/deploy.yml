@@ -32,6 +32,8 @@ registry:
     - GITHUB_TOKEN
 
 builder:
+  dockerfile: Dockerfile
+  target: production
   multiarch: false
   cache:
     type: gha
