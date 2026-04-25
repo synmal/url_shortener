@@ -60,9 +60,13 @@ jobs:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           APP_HOST: ${{ secrets.APP_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
+          SIDEKIQ_WEB_USERNAME: ${{ secrets.SIDEKIQ_WEB_USERNAME }}
+          SIDEKIQ_WEB_PASSWORD: ${{ secrets.SIDEKIQ_WEB_PASSWORD }}
         run: |
           printf 'GITHUB_TOKEN=%s\n' "$GITHUB_TOKEN" > .kamal/secrets
           printf 'RAILS_MASTER_KEY=%s\n' "$RAILS_MASTER_KEY" >> .kamal/secrets
           printf 'URL_SHORTENER_DATABASE_PASSWORD=%s\n' "$URL_SHORTENER_DATABASE_PASSWORD" >> .kamal/secrets
           printf 'POSTGRES_PASSWORD=%s\n' "$URL_SHORTENER_DATABASE_PASSWORD" >> .kamal/secrets
+          printf 'SIDEKIQ_WEB_USERNAME=%s\n' "$SIDEKIQ_WEB_USERNAME" >> .kamal/secrets
+          printf 'SIDEKIQ_WEB_PASSWORD=%s\n' "$SIDEKIQ_WEB_PASSWORD" >> .kamal/secrets
           bundle exec kamal setup -v

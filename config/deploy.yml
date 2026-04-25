@@ -42,6 +42,8 @@ env:
   secret:
     - RAILS_MASTER_KEY
     - URL_SHORTENER_DATABASE_PASSWORD
+    - SIDEKIQ_WEB_USERNAME
+    - SIDEKIQ_WEB_PASSWORD
 
 ssh:
   user: <%= ENV["SSH_USER"] %>
