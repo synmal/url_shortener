@@ -12,19 +12,12 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   require "sidekiq/web"
-  mount Sidekiq::Web => "/sidekiq", constraints: ->(req) {
-    authenticated = Rack::BasicAuth::Request.new(req.env).provided? &&
-      Rack::BasicAuth::Request.new(req.env).basic? &&
-      Rack::BasicAuth::Request.new(req.env).credentials &&
-      Rack::BasicAuth::Request.new(req.env).credentials == [
-        ENV.fetch("SIDEKIQ_WEB_USERNAME", "admin"),
-        ENV.fetch("SIDEKIQ_WEB_PASSWORD", SecureRandom.hex)
-      ]
-
-    unless authenticated
-      Rack::BasicAuth::Request.new(req.env).challenge("Sidekiq")
-    end
-
-    authenticated
-  }
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    ActiveSupport::SecurityUtils.secure_compare(
+      username, ENV.fetch("SIDEKIQ_WEB_USERNAME", "admin")
+    ) & ActiveSupport::SecurityUtils.secure_compare(
+      password, ENV.fetch("SIDEKIQ_WEB_PASSWORD", SecureRandom.hex)
+    )
+  end
+  mount Sidekiq::Web => "/sidekiq"
 end
