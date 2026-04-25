@@ -1,7 +1,7 @@
 class Visit < ApplicationRecord
   belongs_to :short_url
 
-  validates :ip_address, presence: true, format: { with: /\A(\d{1,3}\.){3}\d{1,3}\z/, message: "must be a valid IPv4 address" }
+  validates :ip_address, presence: true, ip_address: true
   validates :visited_at, presence: true
 
   # Geo fields are populated asynchronously after visit creation.
