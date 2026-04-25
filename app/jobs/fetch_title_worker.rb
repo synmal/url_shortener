@@ -12,13 +12,23 @@ class FetchTitleWorker < ApplicationJob
     title = TitleFetcherService.call(target_url.url)
     if title
       target_url.update(title:)
-
-      Turbo::StreamsChannel.broadcast_update_to(
-        "target_url_#{target_url.id}",
-        target: "page_title",
-        partial: "target_urls/title",
-        locals: { target_url: }
-      )
+      broadcast_title_update(target_url)
     end
+  end
+
+  private
+
+  # Broadcast is best-effort — if it fails, the DB already has the title,
+  # so a page refresh will show it. Wrapping separately prevents a broadcast
+  # failure from re-enqueuing the job (which would skip the update since title is now present).
+  def broadcast_title_update(target_url)
+    Turbo::StreamsChannel.broadcast_update_to(
+      "target_url_#{target_url.id}",
+      target: "page_title",
+      partial: "target_urls/title",
+      locals: { target_url: }
+    )
+  rescue StandardError => e
+    Rails.logger.warn("[FetchTitleWorker] Broadcast failed for TargetUrl##{target_url.id}: #{e.message}")
   end
 end

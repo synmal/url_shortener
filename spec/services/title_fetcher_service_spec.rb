@@ -33,7 +33,7 @@ RSpec.describe TitleFetcherService do
       it "returns nil and logs a warning" do
         stub_request(:get, "http://example.com").to_timeout
 
-        expect(Rails.logger).to receive(:warn).with(/\[TitleFetcherService\] Failed to fetch title/)
+        expect(Rails.logger).to receive(:warn).with(/\[TitleFetcherService\] Network error fetching title/)
         expect(TitleFetcherService.call("http://example.com")).to be_nil
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe TitleFetcherService do
       it "returns nil and logs a warning" do
         stub_request(:get, "http://nonexistent.invalid").to_raise(SocketError)
 
-        expect(Rails.logger).to receive(:warn).with(/\[TitleFetcherService\] Failed to fetch title/)
+        expect(Rails.logger).to receive(:warn).with(/\[TitleFetcherService\] Network error fetching title/)
         expect(TitleFetcherService.call("http://nonexistent.invalid")).to be_nil
       end
     end
@@ -59,6 +59,17 @@ RSpec.describe TitleFetcherService do
     context "when the URL is blank" do
       it "raises ArgumentError" do
         expect { TitleFetcherService.call("") }.to raise_error(ArgumentError, /cannot be blank/)
+      end
+    end
+
+    context "when the response body exceeds MAX_BODY_SIZE" do
+      it "truncates the body and still extracts the title" do
+        title = "<html><head><title>Big Page</title></head><body>"
+        padding = "x" * (TitleFetcherService::MAX_BODY_SIZE + 100_000)
+        stub_request(:get, "http://example.com")
+          .to_return(body: title + padding, status: 200)
+
+        expect(TitleFetcherService.call("http://example.com")).to eq("Big Page")
       end
     end
   end

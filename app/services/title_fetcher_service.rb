@@ -27,10 +27,13 @@ class TitleFetcherService
     doc = Nokogiri::HTML(body)
     title = doc.at_css("title")&.text&.strip
     title.presence
-  rescue ArgumentError
+  rescue ArgumentError, URI::Error
     raise
-  rescue StandardError => e
-    Rails.logger.warn("[TitleFetcherService] Failed to fetch title for #{url}: #{e.message}")
+  rescue Net::OpenTimeout, Net::ReadTimeout, SocketError, OpenSSL::SSL::SSLError => e
+    Rails.logger.warn("[TitleFetcherService] Network error fetching title for #{url}: #{e.message}")
     nil
+  rescue StandardError => e
+    Rails.logger.error("[TitleFetcherService] Unexpected error fetching title for #{url}: #{e.class}: #{e.message}")
+    raise
   end
 end

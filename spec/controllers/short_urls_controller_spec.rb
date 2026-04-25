@@ -42,6 +42,17 @@ RSpec.describe ShortUrlsController, type: :controller do
       expect(response).to redirect_to(short_url.reload.target_url.url)
     end
 
+    it "handles counter increment failure gracefully" do
+      short_url = create(:short_url)
+      allow(ShortUrl).to receive(:update_counters).and_raise(ActiveRecord::StatementInvalid.new("deadlock"))
+
+      expect {
+        get :show, params: { slug: short_url.slug }
+      }.not_to change(Visit, :count)
+
+      expect(response).to have_http_status(:found)
+    end
+
     it "returns not found for missing slug" do
       get :show, params: { slug: "nonexistent" }
 
