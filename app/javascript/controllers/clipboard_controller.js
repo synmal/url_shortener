@@ -12,7 +12,8 @@ export default class extends Controller {
       const original = icon.className
       icon.className = "bi bi-clipboard-check text-success"
       setTimeout(() => { icon.className = original }, 1500)
-    }).catch(() => {
+    }).catch((err) => {
+      console.error("[Clipboard] Failed to copy:", err)
       input.select()
       if (!document.execCommand("copy")) {
         const icon = this.element.querySelector("i")
