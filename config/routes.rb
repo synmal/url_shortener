@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   root "target_urls#new"
   resources :target_urls, only: [:new, :create, :show]
 
