@@ -1,4 +1,6 @@
 class TargetUrlsController < ApplicationController
+  before_action :authenticate_user!
+
   def new
     @form = TargetUrlForm.new
   end
@@ -7,7 +9,7 @@ class TargetUrlsController < ApplicationController
     @form = TargetUrlForm.new(form_params)
 
     if @form.valid?
-      result = LinkShortenerService.call(@form.url)
+      result = LinkShortenerService.call(@form.url, user: current_user)
       @short_url = result.short_url
       @target_url = @short_url.target_url
 
@@ -32,7 +34,7 @@ class TargetUrlsController < ApplicationController
   end
 
   def show
-    @short_url = ShortUrl.find_by!(slug: params[:id])
+    @short_url = current_user.short_urls.find_by!(slug: params[:id])
     @target_url = @short_url.target_url
   end
 

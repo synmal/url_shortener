@@ -3,6 +3,10 @@ require "rails_helper"
 RSpec.describe TargetUrlsController, type: :controller do
   render_views
 
+  let(:user) { create(:user) }
+
+  before { sign_in user }
+
   describe "GET #new" do
     it "returns http success" do
       get :new
@@ -34,7 +38,7 @@ RSpec.describe TargetUrlsController, type: :controller do
 
       it "does not enqueue FetchTitleWorker when title already exists" do
         target_url = create(:target_url, url: "https://example.com", title: "Example")
-        create(:short_url, target_url: target_url)
+        create(:short_url, target_url:, user:)
 
         # LinkShortenerService reuses the existing target_url
         expect {
@@ -127,7 +131,7 @@ RSpec.describe TargetUrlsController, type: :controller do
 
   describe "GET #show" do
     it "returns http success" do
-      short_url = create(:short_url)
+      short_url = create(:short_url, user:)
 
       get :show, params: { id: short_url.slug }
 
@@ -140,6 +144,34 @@ RSpec.describe TargetUrlsController, type: :controller do
       get :show, params: { id: "nonexistent" }
 
       expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns not found for another user's short URL" do
+      other_user = create(:user)
+      short_url = create(:short_url, user: other_user)
+
+      get :show, params: { id: short_url.slug }
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "authentication" do
+    before { sign_out user }
+
+    it "redirects to sign in for GET #new" do
+      get :new
+      expect(response).to redirect_to(new_user_session_path)
+    end
+
+    it "redirects to sign in for POST #create" do
+      post :create, params: { target_url_form: { url: "https://example.com" } }
+      expect(response).to redirect_to(new_user_session_path)
+    end
+
+    it "redirects to sign in for GET #show" do
+      get :show, params: { id: "abc123" }
+      expect(response).to redirect_to(new_user_session_path)
     end
   end
 end
