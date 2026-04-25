@@ -1,9 +1,20 @@
 <%= render layout: "shared/centered_card" do %>
-  <h1 class="h4 mb-3">Your shortened URL</h1>
+  <%= turbo_stream_from "target_url_#{@target_url.id}" %>
 
   <div class="mb-3">
     <label class="form-label text-muted small">Original URL</label>
     <div class="text-break"><%= link_to target_url.url, target_url.url, target: "_blank", rel: "noopener" %></div>
+  </div>
+
+  <div id="page_title" class="mb-3">
+    <label class="form-label text-muted small">Title</label>
+    <% if @target_url.title.present? %>
+      <div class="text-break"><%= @target_url.title %></div>
+    <% else %>
+      <div class="text-muted small">
+        <span class="spinner-border spinner-border-sm me-1" role="status"></span> Fetching title...
+      </div>
+    <% end %>
   </div>
 
   <div class="mb-3">

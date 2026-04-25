@@ -23,6 +23,7 @@ class LinkShortenerService
 
     ApplicationRecord.transaction do
       target_url = TargetUrl.find_or_create_by!(url: normalized_url)
+      FetchTitleWorker.perform_later(target_url.id) if target_url.title.blank?
       short_url = create_short_url(target_url)
       Result.new(target_url:, short_url:)
     end
