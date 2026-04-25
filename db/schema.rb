@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_25_080002) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_25_080715) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,9 +19,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_080002) do
     t.string "slug", null: false
     t.bigint "target_url_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.integer "visits_count", default: 0, null: false
     t.index ["slug"], name: "index_short_urls_on_slug", unique: true
     t.index ["target_url_id"], name: "index_short_urls_on_target_url_id"
+    t.index ["user_id"], name: "index_short_urls_on_user_id"
   end
 
   create_table "target_urls", force: :cascade do |t|
@@ -58,5 +60,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_080002) do
   end
 
   add_foreign_key "short_urls", "target_urls"
+  add_foreign_key "short_urls", "users"
   add_foreign_key "visits", "short_urls"
 end
