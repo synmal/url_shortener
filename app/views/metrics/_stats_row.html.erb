@@ -2,8 +2,8 @@
   <%= render "stat_card", label: "Total Visits", value: tag.div(short_url.visits_count, class: "fs-3 fw-semibold") %>
   <%= render "stat_card", label: "Countries", value: tag.div(visits_by_country.size, class: "fs-3 fw-semibold") %>
   <%= render "stat_card", label: "Target URL", value: tag.div(class: "text-break small") { link_to(short_url.target_url.url, short_url.target_url.url, target: "_blank", rel: "noopener") } %>
-  <%= render "stat_card", label: "Short URL", value: tag.div(class: "input-group input-group-sm mt-1") {
+  <%= render "stat_card", label: "Short URL", value: tag.div(class: "input-group input-group-sm mt-1", data: { controller: "clipboard" }) {
     text_field_tag(:short_url, short_url_url(short_url.slug), readonly: true, class: "form-control font-monospace", data: { clipboard_target: "source" }) +
-    button_tag(type: "button", class: "btn btn-outline-secondary", data: { controller: "clipboard", action: "clipboard#copy" }) { tag.i(class: "bi bi-clipboard") }
+    button_tag(type: "button", class: "btn btn-outline-secondary", data: { action: "clipboard#copy" }) { tag.i(class: "bi bi-clipboard") }
   } %>
 </div>
