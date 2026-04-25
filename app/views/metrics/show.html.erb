@@ -1,0 +1,21 @@
+<% content_for(:title, "Metrics — #{@short_url.slug}") %>
+
+<div class="mb-3">
+  <%= link_to "\u2190 Back", root_path %>
+</div>
+
+<h1 class="h4 mb-1">Metrics</h1>
+<p class="text-muted mb-4">
+  <code class="font-monospace"><%= short_url_url(@short_url.slug) %></code>
+</p>
+
+<%= render "stats_row", short_url: @short_url, visits_by_country: @visits_by_country %>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <%= render "country_breakdown", visits_by_country: @visits_by_country %>
+  </div>
+  <div class="col-lg-8">
+    <%= render "recent_visits", recent_visits: @recent_visits, pagy: @pagy %>
+  </div>
+</div>
