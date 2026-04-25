@@ -1,3 +1,6 @@
+# Separates input validation from model/persistence concerns.
+# The controller validates user input here, then passes a clean URL
+# to LinkShortenerService which handles the transactional write.
 class TargetUrlForm
   include ActiveModel::Model
 
