@@ -65,4 +65,4 @@ jobs:
           printf 'RAILS_MASTER_KEY=%s\n' "$RAILS_MASTER_KEY" >> .kamal/secrets
           printf 'URL_SHORTENER_DATABASE_PASSWORD=%s\n' "$URL_SHORTENER_DATABASE_PASSWORD" >> .kamal/secrets
           printf 'POSTGRES_PASSWORD=%s\n' "$URL_SHORTENER_DATABASE_PASSWORD" >> .kamal/secrets
-          bundle exec kamal deploy -v
+          bundle exec kamal setup -v
