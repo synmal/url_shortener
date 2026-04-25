@@ -10,13 +10,15 @@ class FetchTitleWorker < ApplicationJob
     return if target_url.title.present?
 
     title = TitleFetcherService.call(target_url.url)
-    target_url.update(title:) if title
+    if title
+      target_url.update(title:)
 
-    Turbo::StreamsChannel.broadcast_update_to(
-      "target_url_#{target_url.id}",
-      target: "page_title",
-      partial: "target_urls/title",
-      locals: { target_url: target_url }
-    )
+      Turbo::StreamsChannel.broadcast_update_to(
+        "target_url_#{target_url.id}",
+        target: "page_title",
+        partial: "target_urls/title",
+        locals: { target_url: }
+      )
+    end
   end
 end
