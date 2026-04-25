@@ -14,7 +14,12 @@ export default class extends Controller {
       setTimeout(() => { icon.className = original }, 1500)
     }).catch(() => {
       input.select()
-      document.execCommand("copy")
+      if (!document.execCommand("copy")) {
+        const icon = this.element.querySelector("i")
+        const original = icon.className
+        icon.className = "bi bi-clipboard-x text-danger"
+        setTimeout(() => { icon.className = original }, 1500)
+      }
     })
   }
 }
