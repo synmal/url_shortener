@@ -9,21 +9,30 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container">
+        <%= link_to "Url Shortener", root_path, class: "navbar-brand mb-0 h1" %>
+      </div>
+    </nav>
+
+    <main class="container py-4">
+      <div id="flash">
+        <% flash.each do |flash_type, message| %>
+          <% alert_type = { notice: "success", alert: "danger", error: "danger" }.fetch(flash_type.to_sym, "info") %>
+          <%= render "shared/flash_notice", message: message, type: alert_type %>
+        <% end %>
+      </div>
+
+      <%= yield %>
+    </main>
   </body>
 </html>
