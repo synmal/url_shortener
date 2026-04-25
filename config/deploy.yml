@@ -27,7 +27,7 @@ healthcheck:
 registry:
   server: ghcr.io
   username:
-    - GITHUB_USERNAME
+    - GITHUB_TOKEN
   password:
     - GITHUB_TOKEN
 
