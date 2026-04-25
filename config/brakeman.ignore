@@ -1,0 +1,27 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "f60bbcf13718bfa2ff139c89537de2d977f11e9668bdc0498e9d0c3392b67506",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/short_urls_controller.rb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(ShortUrl.find_by!(:slug => params[:slug]).target_url.url, :allow_other_host => true, :status => :found)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ShortUrlsController",
+        "method": "show"
+      },
+      "user_input": "ShortUrl.find_by!(:slug => params[:slug]).target_url.url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "False positive — allow_other_host is required for URL shortener functionality. The redirect target comes from the database (not user input at redirect time) and is validated by TargetUrl model at creation: scheme must be http/https, host must be present, must not resolve to private IPs, and must not be self-referencing."
+    }
+  ]
+}
