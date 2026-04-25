@@ -1,3 +1,7 @@
+:queues:
+  - default
+  - low
+
 :scheduler:
   :schedule:
     batch_process_visits:
