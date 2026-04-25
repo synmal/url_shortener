@@ -66,6 +66,7 @@ group :test do
   gem "selenium-webdriver"
   gem 'shoulda-matchers', '~> 7.0'
   gem 'webmock'
+  gem 'rails-controller-testing'
 end
 
 gem "redis", "~> 5.0"
