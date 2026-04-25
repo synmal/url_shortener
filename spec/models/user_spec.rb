@@ -7,6 +7,9 @@ RSpec.describe User, type: :model do
   it { should validate_uniqueness_of(:email).case_insensitive }
   it { should validate_presence_of(:password) }
 
+  it { should have_many(:short_urls).dependent(:destroy) }
+  it { should have_many(:target_urls).through(:short_urls) }
+
   it "authenticates with valid credentials" do
     user = create(:user, password: "secret123")
     expect(user.valid_password?("secret123")).to be true

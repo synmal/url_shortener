@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe ShortUrl, type: :model do
   describe "associations" do
     it { should belong_to(:target_url) }
+    it { should belong_to(:user) }
     it { should have_many(:visits).dependent(:destroy) }
   end
 

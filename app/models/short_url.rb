@@ -1,5 +1,6 @@
 class ShortUrl < ApplicationRecord
   belongs_to :target_url
+  belongs_to :user
   has_many :visits, dependent: :destroy
 
   # Uses Base58 alphabet (excludes 0/O/l/I to avoid ambiguity). Slugs are generated at the service layer.
