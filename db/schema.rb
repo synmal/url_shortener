@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_25_080715) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_25_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_080715) do
     t.integer "visits_count", default: 0, null: false
     t.index ["slug"], name: "index_short_urls_on_slug", unique: true
     t.index ["target_url_id"], name: "index_short_urls_on_target_url_id"
+    t.index ["user_id", "created_at"], name: "index_short_urls_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_short_urls_on_user_id"
   end
 
@@ -31,6 +32,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_080715) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.string "url", null: false
+    t.index ["url"], name: "index_target_urls_on_url", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -55,6 +57,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_080715) do
     t.bigint "short_url_id", null: false
     t.datetime "updated_at", null: false
     t.datetime "visited_at", null: false
+    t.index ["ip_address"], name: "index_visits_on_ip_address"
     t.index ["processed_at"], name: "index_visits_on_processed_at", where: "(processed_at IS NULL)"
     t.index ["short_url_id"], name: "index_visits_on_short_url_id"
   end
