@@ -1,6 +1,6 @@
 require "active_support/core_ext/integer/time"
 
-raise "APP_HOST must be set in production to prevent self-referencing redirect chains" if ENV["APP_HOST"].blank?
+raise "APP_HOST must be set in production — without it, self-referencing URLs are silently allowed, enabling open redirect chains" if ENV["APP_HOST"].blank?
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.

@@ -67,6 +67,7 @@ class BatchProcessVisitsWorker < ApplicationJob
           processed_at: Time.current
         )
           Rails.logger.warn("[BatchProcessVisitsWorker] Validation failed for Visit##{visit.id}: #{visit.errors.full_messages}")
+          # Fallback: mark processed to prevent infinite reprocessing, bypassing validation since geo data is malformed.
           visit.update_column(:processed_at, Time.current)
         end
       else

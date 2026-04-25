@@ -24,6 +24,8 @@ class IpApi::Batch
     Rails.logger.info("[IpApi::Batch] #{failed_count}/#{parsed.size} lookups failed") if failed_count.positive?
     data = parsed.filter_map { |row| row[:status] == "success" ? row : nil }
 
+    # success? reflects the HTTP request status, not individual IP lookups.
+    # Individual lookup failures are logged but do not affect success?.
     Result.new(data:, rate_limit_remaining:, rate_limit_ttl:, success?: true)
   rescue Faraday::Error, JSON::ParserError => e
     Rails.logger.error("[IpApi::Batch] Request failed: #{e.message}")
