@@ -94,6 +94,76 @@ RSpec.describe TargetUrl, type: :model do
       expect(Rails.logger).to receive(:warn).with(/\[TargetUrl\] DNS resolution failed/)
       build(:target_url, url: "http://unresolvable.example").valid?
     end
+
+    describe "self-referencing URL rejection" do
+      it "rejects URL pointing to the app host" do
+        target_url = build(:target_url, url: "http://test.host/anything")
+
+        expect(target_url).not_to be_valid
+        expect(target_url.errors[:url]).to include(/cannot point to this application/)
+      end
+
+      it "allows URL on a different host" do
+        target_url = build(:target_url, url: "https://other-site.com/anything")
+
+        expect(target_url).to be_valid
+      end
+
+      it "rejects URL with uppercase app host" do
+        target_url = build(:target_url, url: "http://TEST.HOST/anything")
+
+        expect(target_url).not_to be_valid
+      end
+
+      it "allows URL when APP_HOST is not set" do
+        original = ENV["APP_HOST"]
+        ENV["APP_HOST"] = nil
+
+        target_url = build(:target_url, url: "http://test.host/anything")
+        expect(target_url).to be_valid
+      ensure
+        ENV["APP_HOST"] = original
+      end
+
+      it "logs warning when APP_HOST is not set" do
+        original = ENV["APP_HOST"]
+        ENV["APP_HOST"] = nil
+
+        expect(Rails.logger).to receive(:warn).with(/\[TargetUrl\] APP_HOST not set/)
+        build(:target_url, url: "http://test.host/anything").valid?
+      ensure
+        ENV["APP_HOST"] = original
+      end
+
+      it "allows URL when APP_HOST is empty string" do
+        original = ENV["APP_HOST"]
+        ENV["APP_HOST"] = ""
+
+        target_url = build(:target_url, url: "http://test.host/anything")
+        expect(target_url).to be_valid
+      ensure
+        ENV["APP_HOST"] = original
+      end
+
+      it "rejects subdomain of app host" do
+        target_url = build(:target_url, url: "http://sub.test.host/anything")
+
+        expect(target_url).not_to be_valid
+        expect(target_url.errors[:url]).to include(/cannot point to this application/)
+      end
+
+      it "rejects app host with port in URL" do
+        target_url = build(:target_url, url: "http://test.host:8080/anything")
+
+        expect(target_url).not_to be_valid
+      end
+
+      it "rejects app host with HTTPS scheme" do
+        target_url = build(:target_url, url: "https://test.host/anything")
+
+        expect(target_url).not_to be_valid
+      end
+    end
   end
 
   describe "callbacks" do

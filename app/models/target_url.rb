@@ -5,6 +5,7 @@ class TargetUrl < ApplicationRecord
   validates :url, presence: true
   validate :url_must_be_valid
   validate :url_must_not_resolve_to_private_ip
+  validate :url_must_not_be_self_referencing
 
   # IP ranges that must not be targeted — prevents SSRF to cloud metadata, loopback, link-local,
   # carrier-grade NAT, and IPv4-mapped IPv6 addresses.
@@ -39,6 +40,30 @@ class TargetUrl < ApplicationRecord
       end
     rescue URI::Error, ArgumentError
       errors.add(:url, "is not a valid URL")
+    end
+  end
+
+  # Rejects URLs pointing to the app's own domain (including subdomains) to prevent redirect chains.
+  # APP_HOST should be a bare hostname (no port or scheme), e.g. "short.example.com".
+  # If APP_HOST includes a port or scheme, the comparison silently never matches.
+  def url_must_not_be_self_referencing
+    return if url.blank?
+    return if errors[:url].any? # skip if url_must_be_valid already failed
+
+    app_host = ENV["APP_HOST"]
+    if app_host.blank?
+      Rails.logger.warn("[TargetUrl] APP_HOST not set — self-referencing URL check skipped")
+      return
+    end
+
+    begin
+      uri = URI.parse(url)
+      host = uri.host&.downcase
+      return unless host == app_host.downcase || host&.end_with?(".#{app_host.downcase}")
+
+      errors.add(:url, "cannot point to this application")
+    rescue URI::Error
+      # Let url_must_be_valid handle invalid URIs
     end
   end
 

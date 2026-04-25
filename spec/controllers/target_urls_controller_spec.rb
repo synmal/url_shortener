@@ -83,6 +83,25 @@ RSpec.describe TargetUrlsController, type: :controller do
       end
     end
 
+    context "with a self-referencing URL" do
+      it "renders form card with error" do
+        post :create, params: { target_url_form: { url: "http://test.host/abc123" } }, as: :turbo_stream
+
+        expect(response).to have_http_status(:success)
+        expect(assigns(:form).errors[:url]).to include(/cannot point to this application/)
+        expect(assigns(:short_url)).to be_nil
+      end
+    end
+
+    context "with a URL on a different host" do
+      it "creates the short URL successfully" do
+        post :create, params: { target_url_form: { url: "https://other-site.com/abc123" } }, as: :turbo_stream
+
+        expect(response).to have_http_status(:success)
+        expect(assigns(:short_url)).to be_persisted
+      end
+    end
+
     context "when LinkShortenerService raises" do
       it "handles ArgumentError and renders form card replacement" do
         allow(LinkShortenerService).to receive(:call).and_raise(ArgumentError, "Invalid URL format")
