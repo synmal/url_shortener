@@ -60,12 +60,6 @@ accessories:
         - POSTGRES_PASSWORD
     directories:
       - data:/var/lib/postgresql/data
-    options:
-      healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U url_shortener"]
-        interval: 10s
-        timeout: 5s
-        retries: 3
 
   redis:
     image: redis:7-alpine
@@ -73,9 +67,3 @@ accessories:
     port: "6379:6379"
     directories:
       - data:/data
-    options:
-      healthcheck:
-        test: ["CMD", "redis-cli", "ping"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
