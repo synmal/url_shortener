@@ -29,7 +29,7 @@ registry:
 builder:
   dockerfile: Dockerfile
   target: production
-  multiarch: false
+  arch: amd64
   cache:
     type: gha
 
