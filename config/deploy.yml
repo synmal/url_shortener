@@ -36,7 +36,7 @@ builder:
 env:
   clear:
     APP_HOST: $APP_HOST
-    DATABASE_URL: postgres://url_shortener:${URL_SHORTENER_DATABASE_PASSWORD}@url_shortener-db:5432/url_shortener_production
+    DATABASE_URL: <%= "postgres://url_shortener:#{ENV['URL_SHORTENER_DATABASE_PASSWORD']}@url_shortener-db:5432/url_shortener_production" %>
     REDIS_URL: redis://url_shortener-redis:6379/0
     RAILS_LOG_LEVEL: info
   secret:
