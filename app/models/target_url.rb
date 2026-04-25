@@ -44,8 +44,8 @@ class TargetUrl < ApplicationRecord
   end
 
   # Rejects URLs pointing to the app's own domain (including subdomains) to prevent redirect chains.
-  # APP_HOST must be a bare hostname (no port or scheme), e.g. "short.example.com".
-  # If APP_HOST includes a port or scheme, the comparison silently never matches.
+  # APP_HOST is expected to be a bare hostname (no port or scheme), e.g. "short.example.com".
+  # Production enforces this via a raise in production.rb; dev/test log a warning and skip the check.
   def url_must_not_be_self_referencing
     return if url.blank?
     return if errors[:url].any? # skip if url_must_be_valid already failed

@@ -3,7 +3,8 @@ class ShortUrlsController < ApplicationController
     short_url = ShortUrl.find_by!(slug: params[:slug])
 
     begin
-      # Visit tracking is best-effort — failures must not block the redirect.
+      # Visit tracking is best-effort — analytics failures must never block the redirect,
+      # since a broken redirect harms the user while a missed visit only affects metrics.
       ApplicationRecord.transaction do
         short_url.visits.create!(ip_address: request.remote_ip, visited_at: Time.current)
         short_url.increment_visits!
