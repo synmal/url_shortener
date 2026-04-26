@@ -53,6 +53,11 @@ services:
       timeout: 3s
       retries: 5
 
+  selenium:
+    image: selenium/standalone-chromium:latest
+    ports:
+      - "4444:4444"
+
   redis:
     image: redis:7-alpine
     volumes:
