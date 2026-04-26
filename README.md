@@ -2,6 +2,8 @@
 
 A URL shortener service built with Ruby on Rails 8.1. Users can create short URLs, track click analytics with geolocation data, and manage their links through a web dashboard.
 
+**Live application:** https://url-shortener.synmal.xyz
+
 ## Features
 
 - Shorten URLs with automatic page title fetching
