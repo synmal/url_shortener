@@ -4,6 +4,8 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system, js: true) do
+    # Capybara's JS driver pings the test server via localhost — allow it through WebMock
+    WebMock.allow_net_connect!
     if ENV["SELENIUM_REMOTE_URL"].present?
       driven_by :selenium, using: :chrome, screen_size: [1400, 1400],
                            options: {
