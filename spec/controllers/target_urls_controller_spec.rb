@@ -88,6 +88,14 @@ RSpec.describe TargetUrlsController, type: :controller do
     end
 
     context "with a self-referencing URL" do
+      around do |example|
+        original = ENV["APP_HOST"]
+        ENV["APP_HOST"] = "test.host"
+        example.run
+      ensure
+        ENV["APP_HOST"] = original
+      end
+
       it "renders form card with error" do
         post :create, params: { target_url_form: { url: "http://test.host/abc123" } }, as: :turbo_stream
 

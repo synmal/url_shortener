@@ -89,13 +89,25 @@ RSpec.describe TargetUrl, type: :model do
     end
 
     it "logs warning when DNS resolution fails" do
+      original = ENV["APP_HOST"]
+      ENV["APP_HOST"] = "test.host"
       allow(Resolv).to receive(:getaddresses).with("unresolvable.example").and_raise(Resolv::ResolvError)
 
       expect(Rails.logger).to receive(:warn).with(/\[TargetUrl\] DNS resolution failed/)
       build(:target_url, url: "http://unresolvable.example").valid?
+    ensure
+      ENV["APP_HOST"] = original
     end
 
     describe "self-referencing URL rejection" do
+      around do |example|
+        original = ENV["APP_HOST"]
+        ENV["APP_HOST"] = "test.host"
+        example.run
+      ensure
+        ENV["APP_HOST"] = original
+      end
+
       it "rejects URL pointing to the app host" do
         target_url = build(:target_url, url: "http://test.host/anything")
 
