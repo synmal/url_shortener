@@ -262,7 +262,7 @@ samples = {
   "ID to Base58 (1-100K)" => Array.new(10_000) { |i| Approach2IdToBase58.generate(i + 1) },
   "Hash Truncation (6)" => Array.new(10_000) { |i| Approach3HashTruncation.generate(FAKE_URLS[i]) },
   "Hashids" => Array.new(10_000) { |i| Approach4Hashids.generate(i + 1) },
-  "Snowflake" => Array.new(10_000) { Approach5Snowflake.generate },
+  "Snowflake" => Array.new(10_000) { Approach5Snowflake.generate }
 }
 
 samples.each do |label, slugs|
